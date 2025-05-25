@@ -17,5 +17,5 @@ stars = '***'
 # Concatenation
 # winner = first_4_digits + stars + last_3_numbers
 
-print('The winner is: ', first_4_digits,stars, last_3_numbers,
+print('The winner is: ', first_4_digits, stars, last_3_numbers,
       sep='')
