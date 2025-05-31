@@ -1,32 +1,14 @@
-from PIL import Image, ImageEnhance
+import os
+from glob import glob
+from utils import adjust_image
+from utils import show_images_side_by_side
+from utils import save_results
 
-# خواندن تصویر
-image = Image.open("old.jpg")
+image_paths = glob('images/*.*g')
 
-# نمایش تصویر
-image.show()
+out_dir = 'results'
 
-# Enhance brightness
-brightness_enhancer = ImageEnhance.Brightness(image)
-# Increase brightness (1.0 means no change)
-image_b = brightness_enhancer.enhance(2)
-
-# image_b.show()
-
-# Enhance contrast
-contrast_enhancer = ImageEnhance.Contrast(image_b)
-# Increase contrast
-image_c = contrast_enhancer.enhance(1.2)  
-
-# image_c.show()
-
-# Enhance color
-color_enhancer = ImageEnhance.Color(image_c)
- # Increase color intensity
-image_cc = color_enhancer.enhance(3) 
-
-image_cc.show()
-
-
-image_cc.save('reslut.png')
-image_cc.save("result_2.jpg", format="JPEG", quality=95, optimize=True)
+for img_path in image_paths: 
+    img_before, img_after = adjust_image(img_path, 1.8, 1.2, 1.2)
+    show_images_side_by_side(img_before, img_after)
+    save_results(img_after, out_dir, img_path)
