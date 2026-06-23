@@ -23,7 +23,7 @@
 | MATLAB               |                 |                            |                           | ✓                 |                    |                  |
 | Go                   | ✓               |                            | ✓                         |                   |                    |                  |
 
-- **The Top Programming Languages 2024**:	https://spectrum.ieee.org/top-programming-languages-2024
+- **The Top Programming Languages 2024**:	https://spectrum.ieee.org/top-programming-languages-2025
 
-- **The State of Developer Ecosystem 2023**:	https://www.jetbrains.com/lp/devecosystem-2023/
+- **The State of Developer Ecosystem 2025**:	https://devecosystem-2025.jetbrains.com/
 
