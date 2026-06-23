@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>آموزش کلاس در پایتون</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap');
+
+    :root.light {
+      --gradient: linear-gradient(135deg, #f8f9fa 0%, #edf2f7 50%, #eef3ef 100%);
+      --bg: #f5f7fa;
+      --surface: #eef2f6;
+      --card: #ffffff;
+      --border: #d1d9e8;
+      --accent: #4a6eff;
+      --accent2: #ff6b8f;
+      --accent3: #46da90;
+      --warm: #ffa500;
+      --hot: #ff5252;
+      --cold: #4a9eff;
+      --text: #1a1a2e;
+      --muted: #5a6a7a;
+      --code-bg: #ffffff;
+      --str: #0fbe78;
+    }
+
+    :root {
+      --gradient: linear-gradient(135deg, #0d1117 0%, #0a1628 50%, #0d1a14 100%);
+      --bg: #0d1117;
+      --surface: #161b22;
+      --card: #1c2333;
+      --border: #30363d;
+      --accent: #00d9a6;
+      --accent2: #4f9cf9;
+      --accent3: #f06292;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --code-bg: #0d1117;
+      --step-done: #238636;
+      --str: #45f7af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--gradient);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0, 217, 166, .12) 0%, transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(0, 217, 166, .12);
+      color: var(--accent);
+      border: 1px solid rgba(0, 217, 166, .3);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 4px 16px;
+      margin-bottom: 20px;
+      letter-spacing: .04em;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 32px;
+      font-size: 17px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .meta-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 16px;
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-pill span {
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    /* ── LAYOUT ── */
+    .wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── PROGRESS NAV ── */
+    .progress-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      overflow-x: auto;
+    }
+
+    .progress-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .nav-step {
+      font-family: 'Vazirmatn', sans-serif;
+      ;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--muted);
+      transition: all .2s;
+      border: none;
+      background: none;
+    }
+
+    .nav-step:hover {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .nav-step.active {
+      color: var(--accent);
+      background: rgba(0, 217, 166, .1);
+    }
+
+    .nav-step .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .nav-step.active .dot {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .nav-sep {
+      color: var(--border);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      margin-top: 56px;
+      scroll-margin-top: 70px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .step-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .badge-green {
+      background: rgba(0, 217, 166, .15);
+      color: var(--accent);
+      border: 1px solid rgba(0, 217, 166, .3);
+    }
+
+    .badge-blue {
+      background: rgba(79, 156, 249, .15);
+      color: var(--accent2);
+      border: 1px solid rgba(79, 156, 249, .3);
+    }
+
+    .badge-pink {
+      background: rgba(240, 98, 146, .15);
+      color: var(--accent3);
+      border: 1px solid rgba(240, 98, 146, .3);
+    }
+
+    .badge-yellow {
+      background: rgba(230, 180, 50, .15);
+      color: #e6b432;
+      border: 1px solid rgba(230, 180, 50, .3);
+    }
+
+    .badge-purple {
+      background: rgba(160, 100, 240, .15);
+      color: #a064f0;
+      border: 1px solid rgba(160, 100, 240, .3);
+    }
+
+    .badge-teal {
+      background: rgba(0, 200, 180, .15);
+      color: #00c8b4;
+      border: 1px solid rgba(0, 200, 180, .3);
+    }
+
+    .section-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 12px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .info-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .info-item .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .info-item .value {
+      direction: ltr;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .code-header {
+      direction: ltr;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .code-filename {
+      font-size: 12px;
+      color: var(--accent2);
+      font-family: 'Courier New', monospace;
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 5px;
+      padding: 3px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all .15s;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .copy-btn.copied {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    pre {
+      direction: ltr;
+      padding: 20px;
+      overflow-x: auto;
+      tab-size: 4;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: 'Courier New', Consolas, monospace;
+    }
+
+    /* syntax colors */
+    .kw {
+      color: #ff7b72;
+    }
+
+    /* keyword */
+    .cls {
+      color: #ffa657;
+    }
+
+    /* class name */
+    .fn {
+      color: #b173f4;
+    }
+
+    /* function */
+    .st {
+      color: #7ab9ec;
+    }
+
+    /* self / special */
+    .str {
+      color: var(--str);
+    }
+
+    /* string */
+    .num {
+      color: #79c0ff;
+    }
+
+    /* number */
+    .cmt {
+      color: #6e7681;
+      font-style: italic;
+    }
+
+    /* comment */
+    .bi {
+      color: #ffa657;
+    }
+
+    /* built-in */
+
+    /* ── ANALOGY BOX ── */
+    .analogy {
+      background: rgba(0, 217, 166, .06);
+      border: 1px solid rgba(0, 217, 166, .2);
+      border-right: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 14px;
+    }
+
+    .analogy-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .analogy-text {
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .analogy-text strong {
+      color: var(--accent);
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+
+    .callout.tip {
+      background: rgba(0, 217, 166, .08);
+      border: 1px solid rgba(0, 217, 166, .2);
+    }
+
+    .callout.warn {
+      background: rgba(230, 180, 50, .08);
+      border: 1px solid rgba(230, 180, 50, .25);
+    }
+
+    .callout.info {
+      background: rgba(79, 156, 249, .08);
+      border: 1px solid rgba(79, 156, 249, .2);
+    }
+
+    .callout-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── COMPARISON TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--surface);
+      color: var(--muted);
+      font-weight: 600;
+      text-align: right;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+    }
+
+    td {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: rgba(255, 255, 255, .02);
+    }
+
+    /* ── EXERCISE ── */
+    .exercise {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent2);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 24px;
+    }
+
+    .exercise-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: var(--accent2);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .exercise h4 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .ex-list {
+      padding-right: 20px;
+    }
+
+    .ex-list li {
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .ex-list li::marker {
+      color: var(--accent2);
+    }
+
+    /* ── OUTPUT PREVIEW ── */
+    .output {
+      background: var(--bg);
+      border: 1px solid #1a3020;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--str);
+      margin-top: -8px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .output::before {
+      content: 'خروجی';
+      position: absolute;
+      top: -1px;
+      right: 12px;
+      background: #020d05;
+      border: 1px solid #1a3020;
+      border-radius: 0 0 6px 6px;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 10px;
+      padding: 1px 8px;
+      color: #3a8a4a;
+    }
+
+    .output .out-comment {
+      color: #3a8a4a;
+    }
+
+    /* ── SUMMARY ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .summary-card .emoji {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .summary-card .sc-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .summary-card .sc-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    /* ── scrollbar ── */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    @media(max-width:600px) {
+      .section-header {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .analogy {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      pre {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div style="position: fixed; top: 20px; left: 20px; z-index: 1000;">
+    <button id="theme-toggle" style="
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+">
+      🌙 Dark
+    </button>
+  </div>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <div class="hero">
+    <div class="hero-badge">🏥 مهندسی پزشکی × پایتون</div>
+    <h1>آموزش <span>Class</span> در پایتون</h1>
+    <p>از مفهوم تا پیاده‌سازی — با مثال‌های کاربردی از مهندسی پزشکی</p>
+    <div class="meta-row">
+      <div class="meta-pill">⏱ مدت: <span>۱.۵ تا ۲ ساعت</span></div>
+      <div class="meta-pill">🎓 پیش‌نیاز: <span>متغیر، شرط، حلقه، تابع</span></div>
+      <div class="meta-pill">🐍 نسخه: <span>Python 3.x</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PROGRESS NAV ═══════════════ -->
+  <div class="progress-nav">
+    <div class="progress-inner">
+      <button class="nav-step active" onclick="scrollTo('s1')">
+        <div class="dot">۱</div>چرا کلاس؟
+      </button>
+      <span class="nav-sep">›</span>
+      <button class="nav-step" onclick="scrollTo('s2')">
+        <div class="dot">۲</div>ساختار
+      </button>
+      <span class="nav-sep">›</span>
+      <button class="nav-step" onclick="scrollTo('s3')">
+        <div class="dot">۳</div>__init__
+      </button>
+      <span class="nav-sep">›</span>
+      <button class="nav-step" onclick="scrollTo('s4')">
+        <div class="dot">۴</div>متدها
+      </button>
+      <span class="nav-sep">›</span>
+      <button class="nav-step" onclick="scrollTo('s5')">
+        <div class="dot">۵</div>وراثت
+      </button>
+      <span class="nav-sep">›</span>
+      <button class="nav-step" onclick="scrollTo('s6')">
+        <div class="dot">۶</div>پروژه
+      </button>
+    </div>
+  </div>
+
+  <div class="wrapper">
+
+    <!-- ═══════════════ SECTION 1 ═══════════════ -->
+    <div class="section" id="s1">
+      <div class="section-header">
+        <div class="step-badge badge-green">۱</div>
+        <div>
+          <h2>چرا به کلاس نیاز داریم؟</h2>
+          <p>مشکل کد بدون ساختار — انگیزه یادگیری OOP</p>
+        </div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-icon">🏥</div>
+        <div class="analogy-text">
+          تصور کن در بخش ICU هستی. ۱۰ بیمار داری، هر کدام نام، سن، فشار خون و ضربان قلب خودشان را دارند.
+          بدون کلاس، چه اتفاقی می‌افتد؟ <strong>۴۰ متغیر جداگانه!</strong>
+          کلاس مثل یک <strong>پرونده بیمار</strong> است — همه اطلاعات را در یک جا نگه می‌دارد.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">❌ روش قدیمی — بدون کلاس</div>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-filename">without_class.py</span>
+            <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+          </div>
+          <pre><code><span class="cmt"># مشکل: مدیریت اطلاعات چند بیمار</span>
+patient1_name = <span class="str">"علی رضایی"</span>
+patient1_age = <span class="num">45</span>
+patient1_heart_rate = <span class="num">78</span>
+patient1_blood_pressure = <span class="num">120</span>
+
+patient2_name = <span class="str">"مریم احمدی"</span>
+patient2_age = <span class="num">32</span>
+patient2_heart_rate = <span class="num">92</span>
+patient2_blood_pressure = <span class="num">110</span>
+
+<span class="cmt"># ۱۰ بیمار = ۴۰ متغیر 😱</span>
+<span class="cmt"># اگر بخواهیم ضربان قلب بیمار ۷ را چک کنیم؟</span>
+<span class="cmt"># اگر بخواهیم یک بیمار جدید اضافه کنیم؟</span></code></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-icon">⚠️</div>
+          <div>این کد قابل توسعه نیست، خطاپذیر است، و نگهداری آن کابوس است.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════ SECTION 2 ═══════════════ -->
+    <div class="section" id="s2">
+      <div class="section-header">
+        <div class="step-badge badge-blue">۲</div>
+        <div>
+          <h2>ساختار اولیه کلاس</h2>
+          <p>کلاس = نقشه، شیء = خانه‌ای که از روی نقشه ساخته می‌شود</p>
+        </div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-icon">📋</div>
+        <div class="analogy-text">
+          <strong>Class</strong> مثل فرم خالی پرونده بیمار است — ساختار را تعریف می‌کند.<br>
+          <strong>Object</strong> مثل پرونده پُر شده یک بیمار خاص است — داده واقعی دارد.<br>
+          از یک فرم می‌توان هزاران پرونده ساخت!
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">patient.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+        </div>
+        <pre><code><span class="cmt"># تعریف کلاس — نقشه بیمار</span>
+<span class="kw">class</span> <span class="cls">Patient</span>:
+    <span class="kw">pass</span>   <span class="cmt"># فعلاً خالی — فقط ساختار</span>
+
+<span class="cmt"># ساخت دو شیء (Object) از روی این کلاس</span>
+patient1 = <span class="cls">Patient</span>()
+patient2 = <span class="cls">Patient</span>()
+
+<span class="bi">print</span>(<span class="bi">type</span>(patient1))   <span class="cmt"># &lt;class '__main__.Patient'&gt;</span>
+<span class="bi">print</span>(patient1 <span class="kw">is</span> patient2)  <span class="cmt"># False — دو شیء جداگانه</span></code></pre>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="label">کلمه کلیدی</div>
+          <div class="value" style="color:var(--accent3)">class</div>
+        </div>
+        <div class="info-item">
+          <div class="label">نام کلاس</div>
+          <div class="value" style="color:var(--cls)">CamelCase</div>
+        </div>
+        <div class="info-item">
+          <div class="label">ساخت شیء</div>
+          <div class="value" style="color:var(--accent2)">ClassName()</div>
+        </div>
+        <div class="info-item">
+          <div class="label">هر شیء</div>
+          <div class="value">مستقل از بقیه</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════ SECTION 3 ═══════════════ -->
+    <div class="section" id="s3">
+      <div class="section-header">
+        <div class="step-badge badge-pink">۳</div>
+        <div>
+          <h2>متد <code style="font-size:18px">__init__</code> و Attribute‌ها</h2>
+          <p>مقداردهی اولیه — قلب هر کلاس</p>
+        </div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-icon">🔧</div>
+        <div class="analogy-text">
+          <strong>__init__</strong> مثل تکمیل فرم پذیرش بیمار است — وقتی بیمار وارد می‌شود، این اطلاعات حتماً ثبت
+          می‌شوند.
+          <strong>self</strong> یعنی «این بیمار خاص» — نه همه بیماران، بلکه همین یکی که الان داریم ثبتش می‌کنیم.
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">patient_v2.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+        </div>
+        <pre><code><span class="kw">class</span> <span class="cls">Patient</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="st">self</span>, name, age, heart_rate, blood_pressure):
+        <span class="cmt"># self.attribute = مقدار ورودی</span>
+        <span class="st">self</span>.name           = name
+        <span class="st">self</span>.age            = age
+        <span class="st">self</span>.heart_rate     = heart_rate      <span class="cmt"># bpm</span>
+        <span class="st">self</span>.blood_pressure = blood_pressure  <span class="cmt"># mmHg</span>
+        <span class="st">self</span>.status         = <span class="str">"پذیرش شده"</span>     <span class="cmt"># مقدار پیش‌فرض</span>
+
+
+<span class="cmt"># ────── ساخت بیماران ──────</span>
+p1 = <span class="cls">Patient</span>(<span class="str">"علی رضایی"</span>, <span class="num">45</span>, <span class="num">78</span>, <span class="num">120</span>)
+p2 = <span class="cls">Patient</span>(<span class="str">"مریم احمدی"</span>, <span class="num">32</span>, <span class="num">92</span>, <span class="num">140</span>)
+
+<span class="cmt"># دسترسی به attribute‌ها</span>
+<span class="bi">print</span>(p1.name)            <span class="cmt"># علی رضایی</span>
+<span class="bi">print</span>(p2.heart_rate)      <span class="cmt"># 92</span>
+<span class="bi">print</span>(p1.status)          <span class="cmt"># پذیرش شده</span>
+
+<span class="cmt"># تغییر مقدار</span>
+p1.status = <span class="str">"بستری"</span>
+<span class="bi">print</span>(p1.status)          <span class="cmt"># بستری</span></code></pre>
+      </div>
+
+      <div class="output">
+        علی رضایی<br>
+        92<br>
+        پذیرش شده<br>
+        بستری
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div><strong>self</strong> همیشه اولین پارامتر متد است. پایتون آن را خودکار پر می‌کند — موقع فراخوانی نباید
+          برایش مقدار بدهید.</div>
+      </div>
+
+      <div class="exercise">
+        <div class="exercise-label">✏️ تمرین ۱ — ۱۰ دقیقه</div>
+        <h4>کلاس MedicalDevice بسازید</h4>
+        <ul class="ex-list">
+          <li>Attribute‌ها: device_name, serial_number, manufacturer, year</li>
+          <li>یک شیء از دستگاه ECG و یک شیء از دستگاه MRI بسازید</li>
+          <li>اطلاعات هر دستگاه را چاپ کنید</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══════════════ SECTION 4 ═══════════════ -->
+    <div class="section" id="s4">
+      <div class="section-header">
+        <div class="step-badge badge-yellow">۴</div>
+        <div>
+          <h2>متدها — رفتار کلاس</h2>
+          <p>توابعی که داخل کلاس تعریف می‌شوند و روی داده‌های همان شیء کار می‌کنند</p>
+        </div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-icon">🩺</div>
+        <div class="analogy-text">
+          Attribute‌ها اطلاعات بیمار هستند. <strong>متدها</strong> کارهایی هستند که می‌توان با آن بیمار انجام داد:
+          چک کردن وضعیت، صدور گزارش، تجویز دارو...
+          متد = تابع اختصاصی هر شیء.
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">patient_v3.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+        </div>
+        <pre><code><span class="kw">class</span> <span class="cls">Patient</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="st">self</span>, name, age, heart_rate, blood_pressure):
+        <span class="st">self</span>.name           = name
+        <span class="st">self</span>.age            = age
+        <span class="st">self</span>.heart_rate     = heart_rate
+        <span class="st">self</span>.blood_pressure = blood_pressure
+
+    <span class="cmt"># ── متد ۱: نمایش اطلاعات ──</span>
+    <span class="kw">def</span> <span class="fn">show_info</span>(<span class="st">self</span>):
+        <span class="bi">print</span>(<span class="str">f"👤 بیمار: {self.name} | سن: {self.age}"</span>)
+        <span class="bi">print</span>(<span class="str">f"   ضربان قلب: {self.heart_rate} bpm"</span>)
+        <span class="bi">print</span>(<span class="str">f"   فشار خون: {self.blood_pressure} mmHg"</span>)
+
+    <span class="cmt"># ── متد ۲: بررسی وضعیت قلبی ──</span>
+    <span class="kw">def</span> <span class="fn">check_heart_rate</span>(<span class="st">self</span>):
+        <span class="kw">if</span> <span class="st">self</span>.heart_rate &lt; <span class="num">60</span>:
+            <span class="kw">return</span> <span class="str">"⚠️ برادیکاردی — ضربان کم"</span>
+        <span class="kw">elif</span> <span class="st">self</span>.heart_rate &lt;= <span class="num">100</span>:
+            <span class="kw">return</span> <span class="str">"✅ نرمال"</span>
+        <span class="kw">else</span>:
+            <span class="kw">return</span> <span class="str">"🚨 تاکیکاردی — ضربان بالا"</span>
+
+    <span class="cmt"># ── متد ۳: بررسی فشار خون ──</span>
+    <span class="kw">def</span> <span class="fn">check_blood_pressure</span>(<span class="st">self</span>):
+        <span class="kw">if</span> <span class="st">self</span>.blood_pressure &lt; <span class="num">90</span>:
+            <span class="kw">return</span> <span class="str">"⚠️ هیپوتنسیون"</span>
+        <span class="kw">elif</span> <span class="st">self</span>.blood_pressure &lt;= <span class="num">130</span>:
+            <span class="kw">return</span> <span class="str">"✅ نرمال"</span>
+        <span class="kw">else</span>:
+            <span class="kw">return</span> <span class="str">"🚨 هیپرتنسیون"</span>
+
+    <span class="cmt"># ── متد ۴: گزارش کامل ──</span>
+    <span class="kw">def</span> <span class="fn">full_report</span>(<span class="st">self</span>):
+        <span class="bi">print</span>(<span class="str">"="</span> * <span class="num">35</span>)
+        <span class="st">self</span>.show_info()
+        <span class="bi">print</span>(<span class="str">f"   وضعیت قلب: {self.check_heart_rate()}"</span>)
+        <span class="bi">print</span>(<span class="str">f"   فشار خون:  {self.check_blood_pressure()}"</span>)
+        <span class="bi">print</span>(<span class="str">"="</span> * <span class="num">35</span>)
+
+
+<span class="cmt"># ────── استفاده ──────</span>
+p1 = <span class="cls">Patient</span>(<span class="str">"علی رضایی"</span>, <span class="num">45</span>, <span class="num">78</span>, <span class="num">120</span>)
+p2 = <span class="cls">Patient</span>(<span class="str">"مریم احمدی"</span>, <span class="num">32</span>, <span class="num">115</span>, <span class="num">155</span>)
+
+p1.full_report()
+p2.full_report()</code></pre>
+      </div>
+
+      <div class="output">
+        ===================================<br>
+        👤 بیمار: علی رضایی | سن: 45<br>
+        &nbsp;&nbsp;&nbsp;ضربان قلب: 78 bpm<br>
+        &nbsp;&nbsp;&nbsp;فشار خون: 120 mmHg<br>
+        &nbsp;&nbsp;&nbsp;وضعیت قلب: ✅ نرمال<br>
+        &nbsp;&nbsp;&nbsp;فشار خون: ✅ نرمال<br>
+        ===================================<br>
+        ===================================<br>
+        👤 بیمار: مریم احمدی | سن: 32<br>
+        &nbsp;&nbsp;&nbsp;ضربان قلب: 115 bpm<br>
+        &nbsp;&nbsp;&nbsp;فشار خون: 140 mmHg<br>
+        &nbsp;&nbsp;&nbsp;وضعیت قلب: 🚨 تاکیکاردی — ضربان بالا<br>
+        &nbsp;&nbsp;&nbsp;فشار خون: 🚨 هیپرتنسیون<br>
+        ===================================
+      </div>
+
+      <hr class="divider">
+
+      <div class="card">
+        <div class="card-title">🆚 تابع معمولی در برابر متد کلاس</div>
+        <table>
+          <tr>
+            <th>ویژگی</th>
+            <th>تابع معمولی</th>
+            <th>متد کلاس</th>
+          </tr>
+          <tr>
+            <td>تعریف</td>
+            <td>بیرون از کلاس</td>
+            <td>داخل کلاس</td>
+          </tr>
+          <tr>
+            <td>دسترسی به داده</td>
+            <td>فقط از طریق پارامتر</td>
+            <td>از طریق self به همه attribute‌ها</td>
+          </tr>
+          <tr>
+            <td>فراخوانی</td>
+            <td><code>check_hr(patient)</code></td>
+            <td><code>patient.check_hr()</code></td>
+          </tr>
+          <tr>
+            <td>سازماندهی</td>
+            <td>کد پراکنده</td>
+            <td>کد منسجم و کپسوله</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="exercise">
+        <div class="exercise-label">✏️ تمرین ۲ — ۱۵ دقیقه</div>
+        <h4>به کلاس Patient اضافه کنید:</h4>
+        <ul class="ex-list">
+          <li>متد <code>update_vitals(heart_rate, blood_pressure)</code> — به‌روزرسانی علائم حیاتی</li>
+          <li>متد <code>()is_critical</code> — اگر هر دو مقدار غیرنرمال بود True برگرداند</li>
+          <li>یک لیست از ۳ بیمار بسازید و فقط بیماران بحرانی را چاپ کنید</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══════════════ SECTION 5 ═══════════════ -->
+    <div class="section" id="s5">
+      <div class="section-header">
+        <div class="step-badge badge-purple">۵</div>
+        <div>
+          <h2>وراثت (Inheritance)</h2>
+          <p>قدرتمندترین ویژگی OOP — استفاده مجدد از کد</p>
+        </div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-icon">🧬</div>
+        <div class="analogy-text">
+          همه بیماران پرونده دارند، اما بیمار ICU اطلاعات بیشتری نیاز دارد (دستگاه تنفس مصنوعی، سطح اکسیژن...).
+          به جای نوشتن کد از صفر، <strong>از کلاس Patient ارث‌بری می‌کنیم</strong> و فقط چیز جدید اضافه می‌کنیم.
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">icu_patient.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+        </div>
+        <pre><code><span class="cmt"># ── کلاس پایه (Parent) ──</span>
+<span class="kw">class</span> <span class="cls">Patient</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="st">self</span>, name, age, heart_rate, blood_pressure):
+        <span class="st">self</span>.name           = name
+        <span class="st">self</span>.age            = age
+        <span class="st">self</span>.heart_rate     = heart_rate
+        <span class="st">self</span>.blood_pressure = blood_pressure
+
+    <span class="kw">def</span> <span class="fn">show_info</span>(<span class="st">self</span>):
+        <span class="bi">print</span>(<span class="str">f"👤 {self.name} | سن: {self.age}"</span>)
+
+    <span class="kw">def</span> <span class="fn">check_heart_rate</span>(<span class="st">self</span>):
+        <span class="kw">return</span> <span class="str">"✅ نرمال"</span> <span class="kw">if</span> <span class="num">60</span> &lt;= <span class="st">self</span>.heart_rate &lt;= <span class="num">100</span> <span class="kw">else</span> <span class="str">"⚠️ غیرنرمال"</span>
+
+
+<span class="cmt"># ── کلاس فرزند (Child) — بیمار ICU ──</span>
+<span class="kw">class</span> <span class="cls">ICUPatient</span>(<span class="cls">Patient</span>):   <span class="cmt"># ← از Patient ارث می‌برد</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="st">self</span>, name, age, heart_rate, blood_pressure,
+                 oxygen_level, on_ventilator):
+        <span class="cmt"># اول __init__ کلاس پایه را صدا بزن</span>
+        <span class="bi">super</span>().<span class="fn">__init__</span>(name, age, heart_rate, blood_pressure)
+        <span class="cmt"># سپس attribute‌های جدید اضافه کن</span>
+        <span class="st">self</span>.oxygen_level   = oxygen_level    <span class="cmt"># SpO2 %</span>
+        <span class="st">self</span>.on_ventilator  = on_ventilator   <span class="cmt"># True/False</span>
+
+    <span class="cmt"># ── Override — بازنویسی show_info ──</span>
+    <span class="kw">def</span> <span class="fn">show_info</span>(<span class="st">self</span>):
+        <span class="bi">super</span>().<span class="fn">show_info</span>()   <span class="cmt"># نمایش اطلاعات پایه</span>
+        vent = <span class="str">"بله"</span> <span class="kw">if</span> <span class="st">self</span>.on_ventilator <span class="kw">else</span> <span class="str">"خیر"</span>
+        <span class="bi">print</span>(<span class="str">f"   🫁 اکسیژن: {self.oxygen_level}% | ونتیلاتور: {vent}"</span>)
+
+    <span class="cmt"># ── متد جدید — فقط برای ICU ──</span>
+    <span class="kw">def</span> <span class="fn">check_oxygen</span>(<span class="st">self</span>):
+        <span class="kw">if</span> <span class="st">self</span>.oxygen_level &lt; <span class="num">90</span>:
+            <span class="kw">return</span> <span class="str">"🚨 هیپوکسی — نیاز فوری به مداخله"</span>
+        <span class="kw">elif</span> <span class="st">self</span>.oxygen_level &lt; <span class="num">95</span>:
+            <span class="kw">return</span> <span class="str">"⚠️ اکسیژن پایین — پایش دقیق"</span>
+        <span class="kw">else</span>:
+            <span class="kw">return</span> <span class="str">"✅ اکسیژن نرمال"</span>
+
+    <span class="kw">def</span> <span class="fn">icu_report</span>(<span class="st">self</span>):
+        <span class="bi">print</span>(<span class="str">"🏥 گزارش ICU"</span>, <span class="str">"-"</span> * <span class="num">25</span>)
+        <span class="st">self</span>.show_info()
+        <span class="bi">print</span>(<span class="str">f"   قلب:    {self.check_heart_rate()}"</span>)
+        <span class="bi">print</span>(<span class="str">f"   اکسیژن: {self.check_oxygen()}"</span>)
+
+
+<span class="cmt"># ────── استفاده ──────</span>
+regular = <span class="cls">Patient</span>(<span class="str">"سارا کریمی"</span>, <span class="num">28</span>, <span class="num">72</span>, <span class="num">115</span>)
+icu_p   = <span class="cls">ICUPatient</span>(<span class="str">"رضا مظاهری"</span>, <span class="num">67</span>, <span class="num">52</span>, <span class="num">85</span>, <span class="num">88</span>, <span class="kw">True</span>)
+
+regular.show_info()
+<span class="bi">print</span>()
+icu_p.icu_report()
+
+<span class="cmt"># ICUPatient از Patient ارث برده:</span>
+<span class="bi">print</span>(<span class="bi">isinstance</span>(icu_p, <span class="cls">Patient</span>))      <span class="cmt"># True</span>
+<span class="bi">print</span>(<span class="bi">isinstance</span>(icu_p, <span class="cls">ICUPatient</span>))   <span class="cmt"># True</span></code></pre>
+      </div>
+
+      <div class="output">
+        👤 سارا کریمی | سن: 28<br><br>
+        🏥 گزارش ICU -------------------------<br>
+        👤 رضا مظاهری | سن: 67<br>
+        &nbsp;&nbsp;&nbsp;🫁 اکسیژن: 88% | ونتیلاتور: بله<br>
+        &nbsp;&nbsp;&nbsp;قلب: ⚠️ غیرنرمال<br>
+        &nbsp;&nbsp;&nbsp;اکسیژن: 🚨 هیپوکسی — نیاز فوری به مداخله<br>
+        True<br>
+        True
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">🌳 سلسله‌مراتب کلاس‌های ما</div>
+        <pre style="background:transparent;padding:8px 0;font-size:13px;color:var(--muted)">
+                <span style="color:var(--accent)">Patient</span>
+               /       \
+    <span style="color:var(--accent2)">ICUPatient</span>     <span style="color:var(--accent3)">OutpatientPatient</span>
+                          (تمرین شما!)
+    </pre>
+      </div>
+
+      <div class="exercise">
+        <div class="exercise-label">✏️ تمرین ۳ — ۲۰ دقیقه</div>
+        <h4>کلاس OutpatientPatient بسازید (بیمار سرپایی)</h4>
+        <ul class="ex-list">
+          <li>از Patient ارث ببرد</li>
+          <li>Attribute جدید: appointment_date, diagnosis</li>
+          <li>متد جدید: ()send_reminder — پیام یادآوری نوبت</li>
+          <li>متد show_info را override کنید تا تاریخ نوبت هم نمایش دهد</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══════════════ SECTION 6 ═══════════════ -->
+    <div class="section" id="s6">
+      <div class="section-header">
+        <div class="step-badge badge-teal">۶</div>
+        <div>
+          <h2>پروژه نهایی — سیستم پایش بیمارستان</h2>
+          <p>همه چیز را با هم ترکیب کنیم</p>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">hospital_monitor.py</span>
+          <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+        </div>
+        <pre><code><span class="kw">class</span> <span class="cls">Patient</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="st">self</span>, name, age, heart_rate, blood_pressure):
+        <span class="st">self</span>.name           = name
+        <span class="st">self</span>.age            = age
+        <span class="st">self</span>.heart_rate     = heart_rate
+        <span class="st">self</span>.blood_pressure = blood_pressure
+
+    <span class="kw">def</span> <span class="fn">is_critical</span>(<span class="st">self</span>):
+        hr_bad = <span class="kw">not</span> (<span class="num">60</span> &lt;= <span class="st">self</span>.heart_rate &lt;= <span class="num">100</span>)
+        bp_bad = <span class="kw">not</span> (<span class="num">90</span> &lt;= <span class="st">self</span>.blood_pressure &lt;= <span class="num">130</span>)
+        <span class="kw">return</span> hr_bad <span class="kw">or</span> bp_bad
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="st">self</span>):   <span class="cmt"># وقتی print() روی شیء صدا زده می‌شود</span>
+        status = <span class="str">"🚨"</span> <span class="kw">if</span> <span class="st">self</span>.is_critical() <span class="kw">else</span> <span class="str">"✅"</span>
+        <span class="kw">return</span> <span class="str">f"{status} {self.name} (HR:{self.heart_rate}, BP:{self.blood_pressure})"</span>
+
+
+<span class="kw">class</span> <span class="cls">Hospital</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="st">self</span>, name):
+        <span class="st">self</span>.name    = name
+        <span class="st">self</span>.patients = []   <span class="cmt"># لیست بیماران</span>
+
+    <span class="kw">def</span> <span class="fn">admit</span>(<span class="st">self</span>, patient):
+        <span class="st">self</span>.patients.append(patient)
+        <span class="bi">print</span>(<span class="str">f"✔ {patient.name} پذیرش شد"</span>)
+
+    <span class="kw">def</span> <span class="fn">critical_alert</span>(<span class="st">self</span>):
+        <span class="bi">print</span>(<span class="str">f"\n🏥 {self.name} — بیماران بحرانی:"</span>)
+        found = <span class="kw">False</span>
+        <span class="kw">for</span> p <span class="kw">in</span> <span class="st">self</span>.patients:
+            <span class="kw">if</span> p.is_critical():
+                <span class="bi">print</span>(<span class="str">f"  {p}"</span>)
+                found = <span class="kw">True</span>
+        <span class="kw">if not</span> found:
+            <span class="bi">print</span>(<span class="str">"  همه بیماران وضعیت پایدار دارند ✅"</span>)
+
+    <span class="kw">def</span> <span class="fn">summary</span>(<span class="st">self</span>):
+        total    = <span class="bi">len</span>(<span class="st">self</span>.patients)
+        critical = <span class="bi">sum</span>(<span class="num">1</span> <span class="kw">for</span> p <span class="kw">in</span> <span class="st">self</span>.patients <span class="kw">if</span> p.is_critical())
+        <span class="bi">print</span>(<span class="str">f"\n📊 {self.name}: {total} بیمار | {critical} بحرانی"</span>)
+
+
+<span class="cmt"># ────── اجرا ──────</span>
+hospital = <span class="cls">Hospital</span>(<span class="str">"بیمارستان امام خمینی"</span>)
+
+hospital.admit(<span class="cls">Patient</span>(<span class="str">"علی رضایی"</span>,    <span class="num">45</span>, <span class="num">78</span>,  <span class="num">120</span>))
+hospital.admit(<span class="cls">Patient</span>(<span class="str">"مریم احمدی"</span>,   <span class="num">32</span>, <span class="num">115</span>, <span class="num">155</span>))
+hospital.admit(<span class="cls">Patient</span>(<span class="str">"رضا مظاهری"</span>,  <span class="num">67</span>, <span class="num">52</span>,  <span class="num">85</span>))
+hospital.admit(<span class="cls">Patient</span>(<span class="str">"سارا کریمی"</span>,   <span class="num">28</span>, <span class="num">72</span>,  <span class="num">115</span>))
+
+hospital.summary()
+hospital.critical_alert()</code></pre>
+      </div>
+
+      <div class="output">
+        ✔ علی رضایی پذیرش شد<br>
+        ✔ مریم احمدی پذیرش شد<br>
+        ✔ رضا مظاهری پذیرش شد<br>
+        ✔ سارا کریمی پذیرش شد<br><br>
+        📊 بیمارستان امام خمینی: 4 بیمار | 3 بحرانی<br><br>
+        🏥 بیمارستان امام خمینی — بیماران بحرانی:<br>
+        &nbsp;&nbsp;🚨 مریم احمدی (HR:115, BP:155)<br>
+        &nbsp;&nbsp;🚨 رضا مظاهری (HR:52, BP:85)<br>
+      </div>
+    </div>
+
+    <!-- ═══════════════ SUMMARY ═══════════════ -->
+    <hr class="divider">
+    <div class="section" id="summary" style="scroll-margin-top:70px">
+      <div class="section-header">
+        <div class="step-badge badge-green" style="font-size:22px">🎯</div>
+        <div>
+          <h2>جمع‌بندی — آنچه یاد گرفتیم</h2>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="emoji">📦</div>
+          <div class="sc-title">class</div>
+          <div class="sc-sub">قالب / نقشه برای ساخت اشیاء</div>
+        </div>
+        <div class="summary-card">
+          <div class="emoji">🔨</div>
+          <div class="sc-title">__init__</div>
+          <div class="sc-sub">سازنده — مقداردهی اولیه</div>
+        </div>
+        <div class="summary-card">
+          <div class="emoji">🔗</div>
+          <div class="sc-title">self</div>
+          <div class="sc-sub">اشاره به شیء جاری</div>
+        </div>
+        <div class="summary-card">
+          <div class="emoji">⚙️</div>
+          <div class="sc-title">Method</div>
+          <div class="sc-sub">تابع داخل کلاس</div>
+        </div>
+        <div class="summary-card">
+          <div class="emoji">🧬</div>
+          <div class="sc-title">Inheritance</div>
+          <div class="sc-sub">ارث‌بری از کلاس پایه</div>
+        </div>
+        <div class="summary-card">
+          <div class="emoji">🔄</div>
+          <div class="sc-title">Override</div>
+          <div class="sc-sub">بازنویسی متد والد</div>
+        </div>
+      </div>
+
+      <div class="callout info" style="margin-top:20px">
+        <div class="callout-icon">🚀</div>
+        <div><strong>گام بعدی:</strong> مفاهیم Encapsulation (private attributes با <code>_</code> و <code>__</code>)،
+          Class Methods، Static Methods، و Polymorphism</div>
+      </div>
+    </div>
+
+  </div><!-- /wrapper -->
+
+  <script>
+    function scrollTo(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+      document.querySelectorAll('.nav-step').forEach(b => b.classList.remove('active'));
+      const steps = ['s1', 's2', 's3', 's4', 's5', 's6'];
+      const idx = steps.indexOf(id);
+      if (idx >= 0) document.querySelectorAll('.nav-step')[idx].classList.add('active');
+    }
+
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      const text = pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✓ کپی شد';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'کپی'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    // active nav on scroll
+    const sectionIds = ['s1', 's2', 's3', 's4', 's5', 's6'];
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const idx = sectionIds.indexOf(e.target.id);
+          if (idx >= 0) {
+            document.querySelectorAll('.nav-step').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav-step')[idx].classList.add('active');
+          }
+        }
+      });
+    }, { rootMargin: '-50px 0px -50% 0px' });
+
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    let isDarkMode = true;
+
+    function toggleTheme() {
+      const root = document.documentElement;
+
+      if (isDarkMode) {
+        // تغییر به light mode
+        root.classList.add('light');
+        themeToggle.innerHTML = '🌙 Dark';
+        isDarkMode = false;
+        localStorage.setItem('theme', 'light');
+      } else {
+        // تغییر به dark mode
+        root.classList.remove('light');
+        themeToggle.innerHTML = '☀️ Light';
+        isDarkMode = true;
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // بررسی تنظیمات ذخیره شده
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.documentElement.classList.add('light');
+      themeToggle.innerHTML = '🌙 Dark';
+      isDarkMode = false;
+    } else {
+      themeToggle.innerHTML = '☀️ Light';
+    }
+
+    themeToggle.addEventListener('click', toggleTheme);
+  </script>
+</body>
+
+</html>
